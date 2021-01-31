@@ -1,3 +1,12 @@
+const client = contentful.createClient({
+    // This is the space ID. A space is like a project folder in Contentful terms
+    space: "bao7ve9vhfk1",
+    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+    accessToken: "8MOXl3bT6KvbpuTnU65ICHNmKrCThiusXPOqVJ92KHk"
+  });
+
+
+
 let carts = document.querySelectorAll('.add-cart');
 
 let products = [ 
@@ -24,7 +33,14 @@ let products = [
         tag: "blackhoddie",
         price: 20,
         inCart: 0
+    },
+    {
+        name: "Pizzap",
+        tag: "pizza",
+        price: 35,
+        inCart: 0
     }
+
 ];
 
 for(let i=0; i< carts.length; i++) {
@@ -35,6 +51,7 @@ for(let i=0; i< carts.length; i++) {
 }
 
 function onLoadCartNumbers() {
+    
     let productNumbers = localStorage.getItem('cartNumbers');
     if( productNumbers ) {
         document.querySelector('.cart span').textContent = productNumbers;
@@ -42,11 +59,16 @@ function onLoadCartNumbers() {
 }
 
 function cartNumbers(product, action) {
+
+    
     let productNumbers = localStorage.getItem('cartNumbers');
     productNumbers = parseInt(productNumbers);
+    
 
     let cartItems = localStorage.getItem('productsInCart');
     cartItems = JSON.parse(cartItems);
+
+    
 
     if( action ) {
         localStorage.setItem("cartNumbers", productNumbers - 1);
@@ -65,8 +87,13 @@ function cartNumbers(product, action) {
 function setItems(product) {
     // let productNumbers = localStorage.getItem('cartNumbers');
     // productNumbers = parseInt(productNumbers);
+
+    
+
     let cartItems = localStorage.getItem('productsInCart');
     cartItems = JSON.parse(cartItems);
+
+    
 
     if(cartItems != null) {
         let currentProduct = product.tag;
@@ -106,7 +133,13 @@ function totalCost( product, action ) {
     }
 }
 
-function displayCart() {
+  async function displayCart() {
+     let content = await client.getEntries({
+        content_type: 'ecom'
+     });
+    
+      //.then((response) => console.log(response.time))
+      //.catch(console.error)
     let cartItems = localStorage.getItem('productsInCart');
     cartItems = JSON.parse(cartItems);
 
@@ -114,10 +147,13 @@ function displayCart() {
     cart = parseInt(cart);
 
     let productContainer = document.querySelector('.products');
+
+    
     
     if( cartItems && productContainer ) {
         productContainer.innerHTML = '';
         Object.values(cartItems).map( (item, index) => {
+            
             productContainer.innerHTML += 
             `<div class="product"><ion-icon name="close-circle"></ion-icon><img src="./images/${item.tag}.jpg" />
                 <span class="sm-hide">${item.name}</span>
