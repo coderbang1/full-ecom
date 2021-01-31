@@ -39,6 +39,12 @@ let products = [
         tag: "pizza",
         price: 35,
         inCart: 0
+    },
+    {
+        name: "mizzap",
+        tag: "piz",
+        price: 40,
+        inCart: 0
     }
 
 ];
